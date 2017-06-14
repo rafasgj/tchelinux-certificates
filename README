@@ -1,0 +1,13 @@
+Geracao do JSON
+===============
+
+Grave o CSV de participantes do evento contendo Nome e Email, sem
+nenhum header no diretório "data". O nome do arquivo deve ter o
+seguinte formato: YYYY-mm-dd-codinome.csv, onde "codinome" é o mesmo
+nome utilizado na URL do evento, como "codinome.tchelinux.org".
+
+Execute o script gera_lista_participantes.py passando como parametros
+o número de horas do evento (normalmente 6), o nome da instituição,
+o nome da cidade, e o nome do arquivo contendo os dados dos
+participantes do evento.
+
