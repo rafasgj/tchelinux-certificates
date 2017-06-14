@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_blank">
+    <title>Tchelinux - Emissão de Certificados</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!-- OpenGraph -->
+    <meta property="og:image" content="https://tchelinux.org/assets/tchelinux-facebook.png">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- Google Maps -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+    <!--Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- Tchelinux Style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<header class="header">
+    <div class="wrapper">
+        <h1 class="logo-name">
+            <a class="logo-link" href="#" title="Tchelinux Santa Cruz" itemprop="name">Tchelinux<br/>
+            Certificados Digitais</a>
+        </h1>
+    </div>
+</header>
+
+    <section id="requisitar">
+        <div class="container">
+            <h2>Requisição de Certificados Digitais</h2>
+            <form method="GET" action="generateCertificate.php">
+                <div class="form-group">
+                    <input type="text" size="28" id="email" name="email" placeholder="E-Mail de inscrição"></input>
+                </div>
+                <div class="form-group">
+                    <select id="event_info" name="event_info">
+                        <option value="2017-05-20:poa">Porto Alegre, Maio de 2017</option>
+                        <option value="2017-06-27:santacruz">Santa Cruz do Sul, Junho de 2017</option>
+                        <option value="2017-07-10:pelotas">Pelotas, Julho de 2017</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">Requisitar Certificado</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="validar">
+        <div class="container">
+            <h2>Validação de Certificados Digitais</h2>
+            <form method="GET" action="validateCertificate.php">
+                <div class="form-group">
+                    <input type="text" size="32" id="code" name="code" placeholder="Código de Verificação"></input>
+                    <button type="submit" class="btn btn-default">Validar Certificado</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="resultado">
+        <div class="container">
+            <p style="text-align:center">O certificado é:
+            <span class="label label-success" style="margin-left:1em;font-size:14px">VÁLIDO</span></p>
+            <p>Nome: <b>Rafael</b></p>
+            <p>Data: <b>23/02/2012</b></p>
+            <p>Evento: <b>Porto Alegre</b></p>
+            <p style="text-align:center">Codigo de Verificação:<br/><b>9e6d7ac6cc725059c5652c88ecce8a23</b></p>
+        </div>
+    </section>
+
+</body>
+</html>

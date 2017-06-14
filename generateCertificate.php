@@ -22,7 +22,7 @@ function wikify($pdf, $text)
     }
 }
 
-function generate($FULANO, $EMAIL, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
+function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
 
     $MES = array("","Janeiro","Fevereiro","Março","Abril",
                  "Maio","Junho","Julho","Agosto","Setembro",
@@ -82,25 +82,18 @@ function generate($FULANO, $EMAIL, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGER
 }
 
 function main() {
-    if (isset($_GET['FULANO'])) {
-        $FULANO = $_GET['FULANO'];
-        $EMAIL = $_GET['EMAIL'];
-        $DATA = $_GET['DATA'];
-        #$INSTITUICAO = $_GET['INSTITUICAO'];
-        #$CIDADE = $_GET['CIDADE'];
-        #$HORAS = $_GET['HORAS'];
-        #$FINGERPRINT = $_GET['FINGERPRINT'];
-        $CODENAME = $_GET['CODENAME'];
+    if (isset($_GET['event_info'])) {
+        $event_info = explode(":",$_GET['event_info']);
+        $EMAIL = $_GET['email'];
     } else {
-        $FULANO = "Cristina Fan";
         $EMAIL = "criis_fan@hotmail.com";
-        $DATA = "2017-06-27";
-        $CODENAME = 'santacruz';
+        $event_info = explode(":",'2017-06-27:santacruz');
     }
 
-    $filename = 'data/'.$DATA.'-'.$CODENAME.'.json';
+    $DATA = $event_info[0];
+    $CODENAME = $event_info[1];
 
-    echo "\n".($filename)."\n";
+    $filename = 'data/'.$DATA.'-'.$CODENAME.'.json';
 
     $data = json_decode(file_get_contents($filename),true);
 
@@ -108,14 +101,16 @@ function main() {
     $CIDADE = $data['cidade'];
     $HORAS = $data['horas'];
     $DATA = $data['data'];
+
     foreach ($data['participantes'] as $_ => $participante) {
-        if ($FULANO == $participante['nome'] && $EMAIL == $participante['email']) {
+        if ($EMAIL == $participante['email']) {
+            $FULANO = $participante['nome'];
             $FINGERPRINT = $participante['fingerprint'];
             break;
         }
     }
 
-    generate($FULANO, $EMAIL, explode("-",$DATA), $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT);
+    generate($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT);
 }
 
 main()
