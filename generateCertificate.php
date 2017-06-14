@@ -22,15 +22,15 @@ function wikify($pdf, $text)
     }
 }
 
-function generate($FULANO, $EMAIL, $DATA, $LOCAL, $HORAS) {
+function generate($FULANO, $EMAIL, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
 
     $MES = array("","Janeiro","Fevereiro","Março","Abril",
                  "Maio","Junho","Julho","Agosto","Setembro",
                  "Outubro","Novembro","Dezembro");
 
-    $dia = $DATA['dia']." de ".$MES[$DATA['mes']]." de ".$DATA['ano'];
+    $dia = $DATA[2]." de ".$MES[(int)$DATA[1]]." de ".$DATA[0];
 
-    $finger = hash("md5",$FULANO.$EMAIL.$LOCAL.$dia);
+    #$finger = hash("md5",$FULANO.$EMAIL.$LOCAL.$dia);
 
     $MARGIN = 25;
 
@@ -48,7 +48,7 @@ function generate($FULANO, $EMAIL, $DATA, $LOCAL, $HORAS) {
     $msg = 'Seminário de Software Livre';
     $pdf->Cell(297-2*$MARGIN,35,utf8_decode($msg),0,1,'C');
     $pdf->SetFont('Arial','B',32);
-    $pdf->Cell(297-2*$MARGIN,0,'TcheLinux Porto Alegre '.$DATA['ano'],0,1,'C');
+    $pdf->Cell(297-2*$MARGIN,0,'TcheLinux '.$CIDADE.' '.$DATA[0],0,1,'C');
 
     $pdf->SetFont('Times','',28);
     $pdf->Cell(297-2*$MARGIN,90,utf8_decode($FULANO),0,1,'C');
@@ -62,7 +62,7 @@ function generate($FULANO, $EMAIL, $DATA, $LOCAL, $HORAS) {
     $pdf->Write(10,utf8_decode($dia));
     $pdf->Write(10,utf8_decode(", com duração de $HORAS horas,"));
     $pdf->Write(10,utf8_decode(" nas dependências da "));
-    $pdf->Write(10,utf8_decode($LOCAL));
+    $pdf->Write(10,utf8_decode($INSTITUICAO));
     $pdf->Write(10,".");
 
     $pdf->SetFont('Times','',12);
@@ -72,7 +72,7 @@ function generate($FULANO, $EMAIL, $DATA, $LOCAL, $HORAS) {
     $pdf->SetY(-25);
     $pdf->SetX(-114);
     $pdf->SetFont('','B');
-    $pdf->Cell(10,0,$finger,0,1,'L');
+    $pdf->Cell(10,0,$FINGERPRINT,0,1,'L');
     $pdf->SetFont('','');
     $pdf->SetY(-20.5);
     $pdf->SetX(-65.5);
@@ -84,19 +84,38 @@ function generate($FULANO, $EMAIL, $DATA, $LOCAL, $HORAS) {
 function main() {
     if (isset($_GET['FULANO'])) {
         $FULANO = $_GET['FULANO'];
-        $EMAIL = $_GET['FULANO'];
-        $dia = explode('-',trim($_GET['DATA']));
-        $LOCAL = $_GET['LOCAL'];
-        $HORAS = $_GET['HORAS'];
+        $EMAIL = $_GET['EMAIL'];
+        $DATA = $_GET['DATA'];
+        #$INSTITUICAO = $_GET['INSTITUICAO'];
+        #$CIDADE = $_GET['CIDADE'];
+        #$HORAS = $_GET['HORAS'];
+        #$FINGERPRINT = $_GET['FINGERPRINT'];
+        $CODENAME = $_GET['CODENAME'];
     } else {
-        $FULANO = "Emerson Roberto Gonçalves Nunes";
-        $EMAIL = "emerson@example.com";
-        $dia = array(2016,11,19);
-        $LOCAL = "Faculdade SENAC de Porto Alegre";
-        $HORAS = 5;
+        $FULANO = "Cristina Fan";
+        $EMAIL = "criis_fan@hotmail.com";
+        $DATA = "2017-06-27";
+        $CODENAME = 'santacruz';
     }
-    $DATA = array('dia'=>$dia[2],'mes'=>$dia[1],'ano'=>$dia[0]);
-    generate($FULANO, $EMAIL, $DATA, $LOCAL, $HORAS);
+
+    $filename = 'data/'.$DATA.'-'.$CODENAME.'.json';
+
+    echo "\n".($filename)."\n";
+
+    $data = json_decode(file_get_contents($filename),true);
+
+    $INSTITUICAO = $data['instituicao'];
+    $CIDADE = $data['cidade'];
+    $HORAS = $data['horas'];
+    $DATA = $data['data'];
+    foreach ($data['participantes'] as $_ => $participante) {
+        if ($FULANO == $participante['nome'] && $EMAIL == $participante['email']) {
+            $FINGERPRINT = $participante['fingerprint'];
+            break;
+        }
+    }
+
+    generate($FULANO, $EMAIL, explode("-",$DATA), $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT);
 }
 
 main()
