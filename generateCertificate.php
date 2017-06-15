@@ -55,7 +55,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $msg = 'Seminário de Software Livre';
     $pdf->Cell(297-2*$MARGIN,35,utf8_decode($msg),0,1,'C');
     $pdf->SetFont('Arial','B',32);
-    $pdf->Cell(297-2*$MARGIN,0,'TcheLinux '.$CIDADE.' '.$DATA[0],0,1,'C');
+    $pdf->Cell(297-2*$MARGIN,0,'Tchelinux '.$CIDADE.' '.$DATA[0],0,1,'C');
 
     $pdf->SetFont('Times','',28);
     $pdf->Cell(297-2*$MARGIN,90,utf8_decode($FULANO),0,1,'C');
@@ -63,7 +63,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $pdf->SetFont('Times','',18);
 
     $pdf->SetY(95);
-    $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre TcheLinux certifica que"));
+    $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
     $pdf->SetY(125);
     $pdf->Write(10,"esteve presente ao evento realizado em ");
     $pdf->Write(10,utf8_decode($dia));
@@ -75,7 +75,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $pdf->SetFont('Times','',12);
     $pdf->SetY(-30.5);
     $pdf->SetX(-78);
-    $pdf->Cell(21,0,utf8_decode("Código de Confirmação:"),0,0,'R');
+    $pdf->Cell(21,0,utf8_decode("Código de Verificação:"),0,0,'R');
     $pdf->SetY(-25);
     $pdf->SetX(-114);
     $pdf->SetFont('','B');
