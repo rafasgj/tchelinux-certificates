@@ -82,12 +82,18 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
 }
 
 function main() {
+    global $argv;
+
     if (isset($_GET['event_info'])) {
         $event_info = explode(":",$_GET['event_info']);
         $EMAIL = $_GET['email'];
     } else {
-        $EMAIL = "criis_fan@hotmail.com";
-        $event_info = explode(":",'2017-06-27:santacruz');
+        if (count($argv) != 3) {
+            echo "\nusage:\n\t${argv[0]} <email> <event_info>\n\n";
+            exit();
+        }
+        $EMAIL = $argv[1];
+        $event_info = explode(":",$argv[2]);
     }
 
     $DATA = $event_info[0];
@@ -95,7 +101,14 @@ function main() {
 
     $filename = 'data/'.$DATA.'-'.$CODENAME.'.json';
 
-    $data = json_decode(file_get_contents($filename),true);
+    $json = file_get_contents($filename);
+    if (! isset($json)) {
+        //TODO: render error page. "Não foi possível encontrar os dados
+        // do evento."
+        echo "Cannot load data.\n";
+        exit();
+    }
+    $data = json_decode($json,true);
 
     $INSTITUICAO = $data['instituicao'];
     $CIDADE = $data['cidade'];
@@ -110,7 +123,14 @@ function main() {
         }
     }
 
-    generate($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT);
+    if (!isset($FULANO)) {
+        //TODO: render error page. "Não foi possível encontrar os dados
+        // do participante."
+        echo "Cannot find user for email: $EMAIL.\n";
+        exit();
+    }
+   generate($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE,
+            $HORAS, $FINGERPRINT);
 }
 
 main()
