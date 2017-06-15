@@ -35,6 +35,13 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $MARGIN = 25;
 
     $pdf = new FPDF('L','mm','A4');
+
+    $title = utf8_decode("Certificado de Participação");
+    $pdf->SetAuthor("Tchelinux");
+    $pdf->SetTitle($title);
+    $pdf->SetCreator("Tchelinux.org");
+    $pdf->SetSubject($title);
+
     $pdf->SetLeftMargin($MARGIN);
     $pdf->SetRightMargin($MARGIN);
     $pdf->AddPage();
