@@ -74,7 +74,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
 
     $pdf->SetFont('Times','',12);
     $pdf->SetY(-30.5);
-    $pdf->SetX(-78);
+    $pdf->SetX(-80);
     $pdf->Cell(21,0,utf8_decode("Código de Verificação:"),0,0,'R');
     $pdf->SetY(-25);
     $pdf->SetX(-114);
