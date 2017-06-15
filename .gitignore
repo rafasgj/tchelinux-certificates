@@ -1,3 +1,6 @@
+# data directories
 /data/
+/csv/
 
+# output files
 *.pdf

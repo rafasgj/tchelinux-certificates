@@ -11,3 +11,12 @@ o número de horas do evento (normalmente 6), o nome da instituição,
 o nome da cidade, e o nome do arquivo contendo os dados dos
 participantes do evento.
 
+O script generateCertificate.php permite a geração individual de
+certificados, quando executado como ferramenta de linha de comando.
+
+## Configuração dos Eventos
+
+Você deve criar um diretório "data" para utilizar os scripts.
+
+Sugere-se a criação de um diretório "csv" para armazenar as listas
+originais de participantes.
