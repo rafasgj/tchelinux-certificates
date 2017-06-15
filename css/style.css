@@ -40,8 +40,12 @@ h1 {
     padding-top: 64px;
 }
 
+form * {
+    margin-top: 3px;
+}
+
 #validar {
-    display: none;
+/*    display: none; */
 }
 
 #resultado {
@@ -49,11 +53,11 @@ h1 {
     border: #222 1px solid;
     border-radius: 10px;
     float: right;
-    margin: -16.5em 5em 0 0;
+    margin: -13.5em 5em 0 0;
     width: 300px;
     display: none;
 }
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
     #resultado {
         float: none;
         margin: 2em auto 0 auto;
@@ -64,4 +68,8 @@ h1 {
     padding: 0;
     margin: 0;
     width: 300px;
+}
+
+#result-data p {
+    margin-bottom: 0.2em;
 }
