@@ -31,11 +31,14 @@ local = local.split('.')[0]
 
 with open(filename) as csvfile:
     reader = csv.reader(csvfile)
-    participantes = [ { 'nome': row[0], 'email': row[1], 'fingerprint': fp(row[0],row[1],local,ano,mes,dia) } \
-                        for row in reader ]
+    participantes = [ { 'nome': row[0],
+                        'email': row[1],
+                        'fingerprint': fp(row[0],row[1],local,ano,mes,dia)
+                      } for row in reader ]
 
-evento = { "horas": horas, "instituicao": instituicao, "data": "%s-%s-%s"%(ano,mes,dia),
-           "cidade": cidade, "codename": local, "participantes" : participantes }
+evento = { "horas": horas, "instituicao": instituicao,
+           "data": "%s-%s-%s"%(ano,mes,dia), "cidade": cidade,
+           "codename": local, "participantes" : participantes }
 
 with open("data/%s-%s-%s-%s.json"%(ano,mes,dia,local),"w") as outfile:
     print (json.dumps(evento, indent = 4, sort_keys=True), file=outfile)
