@@ -39,7 +39,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $pdf->SetRightMargin($MARGIN);
     $pdf->AddPage();
 
-    $pdf->Image('background.png',90,-10,220);
+    $pdf->Image('images/background.jpg',90,-10,220);
 
     $pdf->SetFont('Arial','B',48);
     $pdf->Cell(297-2*$MARGIN,25,'CERTIFICADO',0,1,'C');
