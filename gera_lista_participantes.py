@@ -1,3 +1,5 @@
+#!/usr/env/bin python3
+
 import csv
 import sys
 from collections import namedtuple
