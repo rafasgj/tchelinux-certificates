@@ -122,8 +122,10 @@ function main() {
     $HORAS = $data['horas'];
     $DATA = $data['data'];
 
+    $EMAIL = tolower($EMAIL);
+
     foreach ($data['participantes'] as $_ => $participante) {
-        if ($EMAIL == $participante['email']) {
+        if ($EMAIL == tolower($participante['email'])) {
             $FULANO = $participante['nome'];
             $FINGERPRINT = $participante['fingerprint'];
             break;
