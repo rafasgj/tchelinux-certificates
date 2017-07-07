@@ -38,10 +38,12 @@ $CIDADE = $data['cidade'];
 $HORAS = $data['horas'];
 $DATA = $data['data'];
 
+$fingerprint = trim($fingerprint)
+
 foreach ($data['participantes'] as $_ => $participante) {
-    if ($fingerprint == $participante['fingerprint']) {
-        $EMAIL = $participante['email'];
-        $FULANO = $participante['nome'];
+    if ($fingerprint == trim($participante['fingerprint'])) {
+        $EMAIL = trim($participante['email']);
+        $FULANO = trim($participante['nome']);
         $data = array('nome'=>$FULANO, 'data'=>$DATA, 'cidade'=>$CIDADE,
                       'horas'=>$HORAS, 'fingerprint' => $fingerprint);
         $json = json_encode($data);
