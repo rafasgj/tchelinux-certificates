@@ -38,7 +38,7 @@ $CIDADE = $data['cidade'];
 $HORAS = $data['horas'];
 $DATA = $data['data'];
 
-$fingerprint = trim($fingerprint)
+$fingerprint = trim($fingerprint);
 
 foreach ($data['participantes'] as $_ => $participante) {
     if ($fingerprint == trim($participante['fingerprint'])) {
