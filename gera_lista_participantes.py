@@ -12,7 +12,13 @@ def fp(nome,email,local,ano,mes,dia):
          "Maio","Junho","Julho","Agosto","Setembro",
          "Outubro","Novembro","Dezembro"]
     data = "%s de %s de %s" % (dia, m[int(mes)], ano)
-    data = nome + email + local + dia
+
+    oldfinger = (['nh','santacruz','pelotas','poa'],'2017')
+
+    if (local in oldfinger[0]) and (ano == oldfinger[1]):
+        data = nome + email + local + dia
+    else:
+        data = nome + email + local + data
 
     return hashlib.md5(data.encode('utf-8')).hexdigest()
 
