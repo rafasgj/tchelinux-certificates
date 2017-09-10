@@ -55,7 +55,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $msg = 'Seminário de Software Livre';
     $pdf->Cell(297-2*$MARGIN,35,utf8_decode($msg),0,1,'C');
     $pdf->SetFont('Arial','B',32);
-    $pdf->Cell(297-2*$MARGIN,0,'Tchelinux '.$CIDADE.' '.$DATA[0],0,1,'C');
+    $pdf->Cell(297-2*$MARGIN,0,'Tchelinux '.utf8_decode($CIDADE).' '.$DATA[0],0,1,'C');
 
     $pdf->SetFont('Times','',28);
     $pdf->Cell(297-2*$MARGIN,90,utf8_decode($FULANO),0,1,'C');
