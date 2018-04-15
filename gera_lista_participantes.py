@@ -40,7 +40,7 @@ with open(filename) as csvfile:
     participantes = [ { 'nome': row[0],
                         'email': row[1],
                         'fingerprint': fp(row[0],row[1],local,ano,mes,dia)
-                      } for row in reader if row[2] != '' ]
+                      } for row in reader if row[2] != '' and row[1].lower()[:4] != "nome" ]
 
 evento = { "horas": horas, "instituicao": instituicao,
            "data": "%s-%s-%s"%(ano,mes,dia), "cidade": cidade,
