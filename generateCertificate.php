@@ -22,7 +22,18 @@ function wikify($pdf, $text)
     }
 }
 
-function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
+function geraCertificadoParticipantes() {
+
+}
+
+function generate($values) {
+    $FULANO = $values[0];
+    $DATA = $values[1];
+    $INSTITUICAO = $values[2];
+    $CIDADE = $values[3];
+    $HORAS = $values[4];
+    $FINGERPRINT = $values[5];
+    $ROLE= $values[6];
 
     $MES = array("","Janeiro","Fevereiro","Março","Abril",
                  "Maio","Junho","Julho","Agosto","Setembro",
@@ -36,7 +47,18 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
 
     $pdf = new FPDF('L','mm','A4');
 
-    $title = utf8_decode("Certificado de Participação");
+    $TYPE = "Participação";
+    $role = "esteve presente ao";
+    if (strtolower($ROLE) == "palestrante") {
+        $TYPE = "Palestrante";
+        $role = "apresentou palestra no";
+    }
+    if (strtolower($ROLE) == "organizador") {
+        $TYPE = "Organizador";
+        $role = "colaborou na organização do";
+    }
+
+    $title = utf8_decode("Certificado de ${TYPE}");
     $pdf->SetAuthor("Tchelinux");
     $pdf->SetTitle($title);
     $pdf->SetCreator("Tchelinux.org");
@@ -48,8 +70,8 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
 
     $pdf->Image('images/background.jpg',90,-10,220);
 
-    $pdf->SetFont('Arial','B',48);
-    $pdf->Cell(297-2*$MARGIN,25,'CERTIFICADO',0,1,'C');
+    $pdf->SetFont('Arial','B',36);
+    $pdf->Cell(297-2*$MARGIN,25,'CERTIFICADO DE '.utf8_decode(strtoupper($TYPE)),0,1,'C');
 
     $pdf->SetFont('Arial','B',24);
     $msg = 'Seminário de Software Livre';
@@ -65,7 +87,7 @@ function generate($FULANO, $DATA, $INSTITUICAO, $CIDADE, $HORAS, $FINGERPRINT) {
     $pdf->SetY(95);
     $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
     $pdf->SetY(125);
-    $pdf->Write(10,"esteve presente ao evento realizado em ");
+    $pdf->Write(10,utf8_decode("${role} evento realizado em "));
     $pdf->Write(10,utf8_decode($dia));
     $pdf->Write(10,utf8_decode(", com duração de $HORAS horas,"));
     $pdf->Write(10,utf8_decode(" nas dependências da "));
@@ -127,6 +149,9 @@ function main() {
     foreach ($data['participantes'] as $_ => $participante) {
         if ($EMAIL == strtolower(trim($participante['email']))) {
             $FULANO = trim($participante['nome']);
+            if (isset($participante['role']))
+                $ROLE = trim($participante['role']);
+            else $ROLE = "participante";
             $FINGERPRINT = trim($participante['fingerprint']);
             break;
         }
@@ -138,8 +163,10 @@ function main() {
         echo "Cannot find user for email: $EMAIL.\n";
         exit();
     }
-   generate($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE,
-            $HORAS, $FINGERPRINT);
+
+    $values = array($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE,
+                    $HORAS, $FINGERPRINT, $ROLE);
+    generate($values);
 }
 
 main()
