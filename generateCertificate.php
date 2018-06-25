@@ -51,7 +51,7 @@ function generate($values) {
     $role = "esteve presente ao";
     if (strtolower($ROLE) == "palestrante") {
         $TYPE = "Palestrante";
-        $role = "apresentou palestra no";
+        $role = "apresentou palestra(s) no";
     }
     if (strtolower($ROLE) == "organizador") {
         $TYPE = "Organizador";
@@ -88,8 +88,9 @@ function generate($values) {
     $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
     $pdf->SetY(125);
     $pdf->Write(10,utf8_decode("${role} evento realizado em "));
-    $pdf->Write(10,utf8_decode($dia));
-    $pdf->Write(10,utf8_decode(", com duração de $HORAS horas,"));
+    $pdf->Write(10,utf8_decode($dia.", "));
+    if ($TYPE == "Participação")
+        $pdf->Write(10,utf8_decode("com duração de $HORAS horas,"));
     $pdf->Write(10,utf8_decode(" nas dependências da "));
     $pdf->Write(10,utf8_decode($INSTITUICAO));
     $pdf->Write(10,".");
