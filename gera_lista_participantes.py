@@ -26,14 +26,15 @@ def fp(nome, email, local, ano, mes, dia):
 
 if len(sys.argv) != 5:
     print("""usage:\n
-             \tgera_lista_participantes.py numero_horas instituicao
-             cidade csv_participantes\n""")
+             \tgera_lista_participantes.py config csv_participantes\n""")
     sys.exit(1)
 
-horas = sys.argv[1]
-instituicao = sys.argv[2]
-cidade = sys.argv[3]
-filename = sys.argv[4]
+config = json.load(sys.argv[1])
+filename = sys.argv[2]
+horas = config.get('horas', 5)
+instituicao = config['instituicao']
+cidade = config['cidade']
+horas_organizacao = config.get('horas_organizacao', horas)
 
 ano, mes, dia, local, *_ = filename.split('-')
 ano = ano.split('/')[-1]
@@ -49,6 +50,7 @@ with open(filename) as csvfile:
                      if row[2] != '' and row[1].lower()[:4] != "nome"]
 
 evento = {"horas": horas, "instituicao": instituicao,
+          "horas_organizacao": horas_organizacao,
           "data": "%s-%s-%s" % (ano, mes, dia), "cidade": cidade,
           "codename": local, "participantes": participantes}
 

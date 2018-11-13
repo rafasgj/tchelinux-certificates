@@ -32,8 +32,9 @@ function generate($values) {
     $INSTITUICAO = $values[2];
     $CIDADE = $values[3];
     $HORAS = $values[4];
-    $FINGERPRINT = $values[5];
-    $ROLE= $values[6];
+    $HORAS_ORGANIZACAO = $values[5];
+    $FINGERPRINT = $values[6];
+    $ROLE= $values[7];
 
     $MES = array("","Janeiro","Fevereiro","Março","Abril",
                  "Maio","Junho","Julho","Agosto","Setembro",
@@ -88,11 +89,13 @@ function generate($values) {
     $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
     $pdf->SetY(125);
     $pdf->Write(10,utf8_decode("${role} evento realizado em "));
-    $pdf->Write(10,utf8_decode($dia.", "));
-    if ($TYPE == "Participação")
-        $pdf->Write(10,utf8_decode("com duração de $HORAS horas,"));
+    $pdf->Write(10,utf8_decode($dia.","));
     $pdf->Write(10,utf8_decode(" nas dependências da "));
     $pdf->Write(10,utf8_decode($INSTITUICAO));
+    if ($TYPE == "Participação")
+        $pdf->Write(10,utf8_decode(", com duração de $HORAS horas"));
+    else if ($TYPE == "Organizador" && isset($HORAS_ORGANIZACAO))
+        $pdf->Write(10,utf8_decode(", por $HORAS_ORGANIZACAO horas"));
     $pdf->Write(10,".");
 
     $pdf->SetFont('Times','',12);
@@ -143,6 +146,11 @@ function main() {
     $INSTITUICAO = $data['instituicao'];
     $CIDADE = $data['cidade'];
     $HORAS = $data['horas'];
+    if (isset($data['horas_organizacao'])) {
+        $HORAS_ORG = $data['horas_organizacao'];
+    } else {
+        $HORAS_ORG = null;
+    }
     $DATA = $data['data'];
 
     $EMAIL = strtolower(trim($EMAIL));
@@ -166,7 +174,7 @@ function main() {
     }
 
     $values = array($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE,
-                    $HORAS, $FINGERPRINT, $ROLE);
+                    $HORAS, $HORAS_ORG, $FINGERPRINT, $ROLE);
     generate($values);
 }
 
