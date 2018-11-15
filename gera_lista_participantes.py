@@ -24,12 +24,13 @@ def fp(nome, email, local, ano, mes, dia):
     return hashlib.md5(data.encode('utf-8')).hexdigest()
 
 
-if len(sys.argv) != 5:
+if len(sys.argv) != 3:
     print("""usage:\n
              \tgera_lista_participantes.py config csv_participantes\n""")
     sys.exit(1)
 
-config = json.load(sys.argv[1])
+with open(sys.argv[1], "r") as f:
+    config = json.load(f)
 filename = sys.argv[2]
 horas = config.get('horas', 5)
 instituicao = config['instituicao']
