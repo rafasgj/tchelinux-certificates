@@ -34,7 +34,8 @@ function generate($values) {
     $HORAS = $values[4];
     $HORAS_ORGANIZACAO = $values[5];
     $FINGERPRINT = $values[6];
-    $ROLES= $values[7];
+    $ROLES = $values[7];
+    $PALESTRAS = $values[8];
 
     $MES = array("","Janeiro","Fevereiro","Março","Abril",
                  "Maio","Junho","Julho","Agosto","Setembro",
@@ -49,18 +50,13 @@ function generate($values) {
     foreach ($ROLES as $i => $ROLE) {
         $ROLE = trim($ROLE);
         $TYPE = "Participante";
-        if (strtolower($ROLE) == "palestrante") {
-            $TYPE = "Palestrante";
-        }
         if (strtolower($ROLE) == "organizador") {
             $TYPE = "Organizador";
+        } elseif  (strtolower($ROLE) == "palestrante") {
+            continue;
         }
 
-        $pdf->AddPage();
-        $pdf->SetX(0);
-        $pdf->SetY(0);
-
-        $pdf->Image('images/background.jpg',90,-10,220);
+        new_page($pdf);
 
         generate_header($pdf, $MARGIN, $TYPE, $CIDADE, $DATA[0]);
 
@@ -71,11 +67,26 @@ function generate($values) {
         } elseif ($TYPE == "Participante") {
             generate_participant($pdf, $INSTITUICAO, $dia, $HORAS);
         }
+        generate_footer($pdf, $FINGERPRINT);
+    }
 
+    $TYPE = "Palestrante";
+    foreach ($PALESTRAS as $i => $PALESTRA) {
+        new_page($pdf);
+        generate_header($pdf, $MARGIN, $TYPE, $CIDADE, $DATA[0]);
+        render_recipient($pdf, $MARGIN, $FULANO);
+        generate_speech($pdf, $INSTITUICAO, $dia, $PALESTRA);
         generate_footer($pdf, $FINGERPRINT);
     }
 
     $pdf->Output();
+}
+
+function new_page($pdf) {
+    $pdf->AddPage();
+    $pdf->SetX(0);
+    $pdf->Sety(0);
+    $pdf->Image('images/background.jpg',90,-10,220);
 }
 
 function start_document($MARGIN) {
@@ -102,6 +113,17 @@ function render_commom_text($pdf) {
     $pdf->SetY(85);
     $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
     $pdf->SetY(115);
+}
+
+function generate_speech($pdf, $INSTITUICAO, $DATE, $PALESTRA) {
+    render_commom_text($pdf);
+    $pdf->SetFont('Times','',18);
+    $pdf->Write(10,utf8_decode("apresentou a palestra "));
+    $pdf->SetFont('Times','B',18);
+    $pdf->Write(10,utf8_decode($PALESTRA));
+    $pdf->SetFont('Times','',18);
+    $pdf->Write(10, utf8_decode(" no evento realizado em "));
+    $pdf->Write(10,utf8_decode("$DATE, nas dependências da $INSTITUICAO."));
 }
 
 function generate_participant($pdf, $INSTITUICAO, $DATE, $HORAS) {
@@ -169,7 +191,7 @@ function main() {
     if (! isset($json)) {
         //TODO: render error page. "Não foi possível encontrar os dados
         // do evento."
-        echo "Cannot load data.\n";
+        echo "Cannot load data. Contact administrator.\n";
         exit();
     }
     $data = json_decode($json,true);
@@ -190,9 +212,14 @@ function main() {
         if ($EMAIL == strtolower(trim($participante['email']))) {
             $FULANO = trim($participante['nome']);
             if (isset($participante['role']))
-                $ROLE = trim($participante['role']);
-            else $ROLE = explode(",", "participante, organizador");
+                $ROLE = explode(",", $participante['role']);
+            else $ROLE = array("participante");
             $FINGERPRINT = trim($participante['fingerprint']);
+            if (isset($participante['palestras'])) {
+                $PALESTRAS = $participante['palestras'];
+            } else {
+                $PALESTRAS = array();
+            }
             break;
         }
     }
@@ -205,7 +232,7 @@ function main() {
     }
 
     $values = array($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE,
-                    $HORAS, $HORAS_ORG, $FINGERPRINT, $ROLE);
+                    $HORAS, $HORAS_ORG, $FINGERPRINT, $ROLE, $PALESTRAS);
     generate($values);
 }
 
