@@ -34,7 +34,7 @@ function generate($values) {
     $HORAS = $values[4];
     $HORAS_ORGANIZACAO = $values[5];
     $FINGERPRINT = $values[6];
-    $ROLE= $values[7];
+    $ROLES= $values[7];
 
     $MES = array("","Janeiro","Fevereiro","Março","Abril",
                  "Maio","Junho","Julho","Agosto","Setembro",
@@ -42,35 +42,83 @@ function generate($values) {
 
     $dia = $DATA[2]." de ".$MES[(int)$DATA[1]]." de ".$DATA[0];
 
-    #$finger = hash("md5",$FULANO.$EMAIL.$LOCAL.$dia);
-
     $MARGIN = 25;
 
+    $pdf = start_document($MARGIN);
+
+    foreach ($ROLES as $i => $ROLE) {
+        $ROLE = trim($ROLE);
+        $TYPE = "Participante";
+        if (strtolower($ROLE) == "palestrante") {
+            $TYPE = "Palestrante";
+        }
+        if (strtolower($ROLE) == "organizador") {
+            $TYPE = "Organizador";
+        }
+
+        $pdf->AddPage();
+        $pdf->SetX(0);
+        $pdf->SetY(0);
+
+        $pdf->Image('images/background.jpg',90,-10,220);
+
+        generate_header($pdf, $MARGIN, $TYPE, $CIDADE, $DATA[0]);
+
+        render_recipient($pdf, $MARGIN, $FULANO);
+
+        if ($TYPE == "Organizador") {
+            generate_organization($pdf, $INSTITUICAO, $dia, $HORAS_ORGANIZACAO);
+        } elseif ($TYPE == "Participante") {
+            generate_participant($pdf, $INSTITUICAO, $dia, $HORAS);
+        }
+
+        generate_footer($pdf, $FINGERPRINT);
+    }
+
+    $pdf->Output();
+}
+
+function start_document($MARGIN) {
     $pdf = new FPDF('L','mm','A4');
 
-    $TYPE = "Participação";
-    $role = "esteve presente ao";
-    if (strtolower($ROLE) == "palestrante") {
-        $TYPE = "Palestrante";
-        $role = "apresentou palestra(s) no";
-    }
-    if (strtolower($ROLE) == "organizador") {
-        $TYPE = "Organizador";
-        $role = "colaborou na organização do";
-    }
-
-    $title = utf8_decode("Certificado de ${TYPE}");
     $pdf->SetAuthor("Tchelinux");
-    $pdf->SetTitle($title);
     $pdf->SetCreator("Tchelinux.org");
-    $pdf->SetSubject($title);
+    $pdf->SetTitle("Certificado Tchelinux");
+    $pdf->SetSubject("Certificado Tchelinux");
 
     $pdf->SetLeftMargin($MARGIN);
     $pdf->SetRightMargin($MARGIN);
-    $pdf->AddPage();
 
-    $pdf->Image('images/background.jpg',90,-10,220);
+    return $pdf;
+}
 
+function render_recipient($pdf, $MARGIN, $FULANO) {
+    $pdf->SetFont('Times','',28);
+    $pdf->Cell(297-2*$MARGIN,90,utf8_decode($FULANO),0,1,'C');
+}
+
+function render_commom_text($pdf) {
+    $pdf->SetFont('Times','',18);
+    $pdf->SetY(85);
+    $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
+    $pdf->SetY(115);
+}
+
+function generate_participant($pdf, $INSTITUICAO, $DATE, $HORAS) {
+    render_commom_text($pdf);
+    $pdf->Write(10,utf8_decode("esteve presente ao evento realizado em "));
+    $pdf->Write(10,utf8_decode("$DATE, nas dependências da $INSTITUICAO, "));
+    $pdf->Write(10,utf8_decode("com duração de $HORAS horas."));
+}
+
+function generate_organization($pdf, $INSTITUICAO, $DATE, $HORAS) {
+    render_commom_text($pdf);
+    $pdf->Write(10,utf8_decode("colaborou na organização do evento realizado em "));
+    $pdf->Write(10,utf8_decode("$DATE, nas dependências da $INSTITUICAO, "));
+    $pdf->Write(10,utf8_decode("por $HORAS horas."));
+}
+
+function generate_header($pdf, $MARGIN, $TYPE, $CIDADE, $DATE) {
     $pdf->SetFont('Arial','B',36);
     $pdf->Cell(297-2*$MARGIN,25,'CERTIFICADO DE '.utf8_decode(strtoupper($TYPE)),0,1,'C');
 
@@ -78,26 +126,10 @@ function generate($values) {
     $msg = 'Seminário de Software Livre';
     $pdf->Cell(297-2*$MARGIN,35,utf8_decode($msg),0,1,'C');
     $pdf->SetFont('Arial','B',32);
-    $pdf->Cell(297-2*$MARGIN,0,'Tchelinux '.utf8_decode($CIDADE).' '.$DATA[0],0,1,'C');
+    $pdf->Cell(297-2*$MARGIN,0,'Tchelinux '.utf8_decode($CIDADE).' '.$DATE,0,1,'C');
+}
 
-    $pdf->SetFont('Times','',28);
-    $pdf->Cell(297-2*$MARGIN,90,utf8_decode($FULANO),0,1,'C');
-
-    $pdf->SetFont('Times','',18);
-
-    $pdf->SetY(95);
-    $pdf->Write(10,utf8_decode("O Grupo de Usuários de Software Livre Tchelinux certifica que"));
-    $pdf->SetY(125);
-    $pdf->Write(10,utf8_decode("${role} evento realizado em "));
-    $pdf->Write(10,utf8_decode($dia.","));
-    $pdf->Write(10,utf8_decode(" nas dependências da "));
-    $pdf->Write(10,utf8_decode($INSTITUICAO));
-    if ($TYPE == "Participação")
-        $pdf->Write(10,utf8_decode(", com duração de $HORAS horas"));
-    else if ($TYPE == "Organizador" && isset($HORAS_ORGANIZACAO))
-        $pdf->Write(10,utf8_decode(", por $HORAS_ORGANIZACAO horas"));
-    $pdf->Write(10,".");
-
+function generate_footer($pdf, $FINGERPRINT) {
     $pdf->SetFont('Times','',12);
     $pdf->SetY(-30.5);
     $pdf->SetX(-80);
@@ -110,9 +142,8 @@ function generate($values) {
     $pdf->SetY(-20.5);
     $pdf->SetX(-65.5);
     $pdf->Cell(15,0,'https://certificados.tchelinux.org',0,0,'R');
-
-    $pdf->Output();
 }
+
 
 function main() {
     global $argv;
@@ -160,7 +191,7 @@ function main() {
             $FULANO = trim($participante['nome']);
             if (isset($participante['role']))
                 $ROLE = trim($participante['role']);
-            else $ROLE = "participante";
+            else $ROLE = explode(",", "participante, organizador");
             $FINGERPRINT = trim($participante['fingerprint']);
             break;
         }
