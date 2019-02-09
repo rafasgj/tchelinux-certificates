@@ -22,3 +22,13 @@ Você deve criar um diretório "data" para utilizar os scripts.
 
 Sugere-se a criação de um diretório "csv" para armazenar as listas
 originais de participantes.
+
+## Formato do CSV
+
+_Nome_, _email_, X, _papel ou palestra_
+
+* Nome: É o nome que vai no certificado.
+* email: É a chave de busca do certificado.
+* x: É um valor qualquer (sugere-se 'x'), use "nada" ('') para "no-show".
+* papel ou palestra: É o papel do participante
+ ("organizador" ou "participante"), ou o título da palestra apresentada.
