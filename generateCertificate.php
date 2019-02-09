@@ -48,6 +48,7 @@ function generate($values) {
     $pdf = start_document($MARGIN);
 
     foreach ($ROLES as $i => $ROLE) {
+        fwrite(STDERR,"$FULANO: $ROLE".PHP_EOL);
         $ROLE = trim($ROLE);
         $TYPE = "Participante";
         if (strtolower($ROLE) == "organizador") {
@@ -211,9 +212,12 @@ function main() {
     foreach ($data['participantes'] as $_ => $participante) {
         if ($EMAIL == strtolower(trim($participante['email']))) {
             $FULANO = trim($participante['nome']);
-            if (isset($participante['role']))
-                $ROLE = explode(",", $participante['role']);
-            else $ROLE = array("participante");
+            if (isset($participante['roles']))
+                $ROLES = $participante['roles'];
+            else if (isset($participante['role']))
+                $ROLES = array($participante['role']);
+            else
+                $ROLES = array("participante");
             $FINGERPRINT = trim($participante['fingerprint']);
             if (isset($participante['palestras'])) {
                 $PALESTRAS = $participante['palestras'];
@@ -232,7 +236,7 @@ function main() {
     }
 
     $values = array($FULANO, explode("-",$DATA), $INSTITUICAO, $CIDADE,
-                    $HORAS, $HORAS_ORG, $FINGERPRINT, $ROLE, $PALESTRAS);
+                    $HORAS, $HORAS_ORG, $FINGERPRINT, $ROLES, $PALESTRAS);
     generate($values);
 }
 
