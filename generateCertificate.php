@@ -22,10 +22,6 @@ function wikify($pdf, $text)
     }
 }
 
-function geraCertificadoParticipantes() {
-
-}
-
 function generate($values) {
     $FULANO = $values[0];
     $DATA = $values[1];
@@ -47,8 +43,17 @@ function generate($values) {
 
     $pdf = start_document($MARGIN);
 
-    foreach ($ROLES as $i => $ROLE) {
-        fwrite(STDERR,"$FULANO: $ROLE".PHP_EOL);
+    $valid_roles = array();
+    if (in_array("organizador", $ROLES)) {
+        array_push($valid_roles, "organizador");
+    } else if (in_array("participante", $ROLES)) {
+        array_push($valid_roles, "participante");
+    }
+    if (in_array("palestrante", $ROLES)) {
+        array_push($valid_roles, "palestrante");
+    }
+
+    foreach ($valid_roles as $i => $ROLE) {
         $ROLE = trim($ROLE);
         $TYPE = "Participante";
         if (strtolower($ROLE) == "organizador") {
