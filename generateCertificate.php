@@ -8,6 +8,7 @@
 # 2017a - 20 de Maio de 2017
 
 include("fpdf.php");
+include("datafile.php");
 
 function wikify($pdf, $text)
 {
@@ -177,7 +178,7 @@ function main() {
     global $argv;
 
     if (isset($_GET['event_info'])) {
-        $event_info = explode(":",$_GET['event_info']);
+        $src_info = $_GET['event_info'];
         $EMAIL = $_GET['email'];
     } else {
         if (count($argv) != 3) {
@@ -185,15 +186,10 @@ function main() {
             exit();
         }
         $EMAIL = $argv[1];
-        $event_info = explode(":",$argv[2]);
+        $src_info = $argv[2];
     }
 
-    $DATA = $event_info[0];
-    $CODENAME = $event_info[1];
-
-    $filename = 'data/'.$DATA.'-'.$CODENAME.'.json';
-
-    $json = file_get_contents($filename);
+    $json = file_get_contents(get_certificate_dbfile($src_info));
     if (! isset($json)) {
         //TODO: render error page. "Não foi possível encontrar os dados
         // do evento."

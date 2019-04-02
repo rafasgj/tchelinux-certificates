@@ -1,5 +1,7 @@
 <?php
 
+include('datafile.php')
+
 function error($msg) {
     #global $event_data, $fingerprint;
     http_response_code(204);
