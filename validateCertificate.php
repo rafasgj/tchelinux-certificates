@@ -21,13 +21,7 @@ if (isset($_GET['event_info'])) {
     $event_data = $argv[2];
 }
 
-$event_info = explode(":",$event_data);
-$DATA = $event_info[0];
-$CODENAME = $event_info[1];
-
-$filename = 'data/'.$DATA.'-'.$CODENAME.'.json';
-
-$json = file_get_contents($filename);
+$json = file_get_contents($get_certificate_dbfile($event_data));
 if (! isset($json)) {
     //TODO: render error page. "Não foi possível encontrar os dados
     // do evento."
