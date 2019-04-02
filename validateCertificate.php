@@ -1,6 +1,6 @@
 <?php
 
-include('datafile.php')
+include('datafile.php');
 
 function error($msg) {
     #global $event_data, $fingerprint;
