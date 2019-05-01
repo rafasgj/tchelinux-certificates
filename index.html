@@ -114,11 +114,16 @@
                                 $('#resultado #cidade').text(obj.cidade)
                                 $('#resultado #horas').text(obj.horas)
                                 $('#resultado #fingerprint').text(obj.fingerprint)
+                                $('#resultado #horas_organizacao').text(obj.organizacao)
+                                if (obj.horas > 0) {
+                                    $('#resultado #participante').css('display', 'block')
+                                } else {
+                                    $('#resultado #participante').css('display', 'none')
+                                }
                                 if (obj.organizacao > 0) {
-                                    $('#resultado #horas_organizacao').text(obj.organizacao)
                                     $('#resultado #organizacao').css('display', 'block')
                                 } else {
-                                    $('#resultado #organizacao').css('display', 'nane')
+                                    $('#resultado #organizacao').css('display', 'none')
                                 }
                                 if (obj.palestras.length > 0) {
                                     $('#resultado #palestras').css('display', 'block')
@@ -168,7 +173,7 @@
                 <p>Nome: <b id="participante"></b></p>
                 <p>Data: <b id="data"></b></p>
                 <p>Evento: <b id="cidade"></b></p>
-                <p>Horas de Participação: <b id="horas"></b></p>
+                <p id="participante">Horas de Participação: <b id="horas"></b></p>
                 <p id="organizacao">Horas de Organização: <b id="horas_organizacao"></b></p>
                 <p id="palestras">Palestras:<ul id="list_palestras"></ul>
                 <p style="text-align:center">Codigo de Verificação:<br/><b id="fingerprint"></b></p>
