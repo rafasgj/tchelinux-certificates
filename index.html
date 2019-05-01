@@ -114,6 +114,22 @@
                                 $('#resultado #cidade').text(obj.cidade)
                                 $('#resultado #horas').text(obj.horas)
                                 $('#resultado #fingerprint').text(obj.fingerprint)
+                                if (obj.organizacao > 0) {
+                                    $('#resultado #horas_organizacao').text(obj.organizacao)
+                                    $('#resultado #organizacao').css('display', 'block')
+                                } else {
+                                    $('#resultado #organizacao').css('display', 'nane')
+                                }
+                                if (obj.palestras.length > 0) {
+                                    $('#resultado #palestras').css('display', 'block')
+                                    for (p in obj.palestras) {
+                                        titulo = obj.palestras[p]
+                                        $('#list_palestras').append($('<li></li>').text(titulo))
+                                    }
+                                } else {
+                                    $('#resultado #palestras').css('display', 'none')
+                                }
+
                                 $('#validate_label').removeClass("label-danger")
                                 $('#validate_label').addClass("label-success")
                                 $('#validate_label').css('display','inline-block')
@@ -131,7 +147,8 @@
                                 $('#validate_label').css('font-size','x-large')
                                 $('#validate_label').text("INVÁLIDO")
                             }
-                        }).fail(function(data) {
+                        }).fail(function(data, textStatus, response) {
+                            alert(response + ": " + textStatus)
                             alert("Something went pretty wrong when validating code.")
                         });
                     });
@@ -151,7 +168,9 @@
                 <p>Nome: <b id="participante"></b></p>
                 <p>Data: <b id="data"></b></p>
                 <p>Evento: <b id="cidade"></b></p>
-                <p>Número de Horas: <b id="horas"></b></p>
+                <p>Horas de Participação: <b id="horas"></b></p>
+                <p id="organizacao">Horas de Organização: <b id="horas_organizacao"></b></p>
+                <p id="palestras">Palestras:<ul id="list_palestras"></ul>
                 <p style="text-align:center">Codigo de Verificação:<br/><b id="fingerprint"></b></p>
             </div>
         </div>
