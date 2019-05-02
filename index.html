@@ -127,6 +127,7 @@
                                 }
                                 if (obj.palestras.length > 0) {
                                     $('#resultado #palestras').css('display', 'block')
+                                    $('#list_palestras').empty()
                                     for (p in obj.palestras) {
                                         titulo = obj.palestras[p]
                                         $('#list_palestras').append($('<li></li>').text(titulo))
