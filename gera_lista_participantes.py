@@ -53,7 +53,9 @@ with open(filename) as csvfile:
     lista = [{'nome': row[0],
               'email': row[1],
               'fingerprint': fp(row[0], row[1], local, ano, mes, dia),
-              'role': row[3] if len(row) > 3 else "participante"}
+              'role': row[3] if len(row) > 3 else "participante",
+              'palestras': row[4:] if len(row) > 4 and
+              row[3] == 'palestrante' else []}
              for row in reader
              if row[2] != '' and row[1].lower()[:4] != "nome"]
     participantes = {}
@@ -62,21 +64,19 @@ with open(filename) as csvfile:
                                            'email': x['email'],
                                            'fingerprint': x['fingerprint'],
                                            'roles': [],
-                                           'palestras': []
+                                           'palestras': set()
                                            })
         roles = p['roles']
-        if x['role'] in ['organizador', 'participante']:
-            if x['role'] not in roles:
-                roles.append(x['role'])
-        else:
-            if 'palestrante' not in roles:
-                roles.append('palestrante')
-            palestras = p['palestras']
-            if x['role'] not in palestras:
-                palestras.append(x['role'])
-                p['palestras'] = palestras
-        p['roles'] = roles
-        participantes[x['email']] = p
+        if x['role'] not in roles:
+            p['roles'].append(x['role'])
+        if x['role'] == 'palestrante':
+            [p['palestras'].add(a.strip()) for a in x['palestras']
+             if len(a.strip()) > 0]
+        participantes[p['email']] = p
+    for p in participantes.keys():
+        palestras = list(participantes[p]['palestras'])
+        participantes[p]['palestras'] = palestras
+
 evento = {"horas": horas, "instituicao": instituicao,
           "horas_organizacao": horas_organizacao,
           "data": "%s-%s-%s" % (ano, mes, dia), "cidade": cidade,
