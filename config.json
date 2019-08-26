@@ -2,5 +2,8 @@
     "horas": 6,
     "instituicao": "Universidade Católica de Pelotas",
     "cidade": "Pelotas",
-    "horas_organizacao": 12
+    "horas_organizacao": 12,
+    "cname": "pelotas",
+    "data": "2019-08-24",
+    "files": ["csv/2019-08-24-pelotas.csv", "participantes.csv"]
 }
