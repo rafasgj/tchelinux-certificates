@@ -92,9 +92,9 @@ for filename in filelist:
                 [p['palestras'].add(a.strip()) for a in x['palestras']
                  if len(a.strip()) > 0]
             participantes[p['email']] = p
-        for p in participantes.keys():
-            palestras = list(participantes[p]['palestras'])
-            participantes[p]['palestras'] = palestras
+for p in participantes:
+    palestras = list(participantes[p]['palestras'])
+    participantes[p]['palestras'] = palestras
 
 evento = {"horas": horas, "instituicao": instituicao,
           "horas_organizacao": horas_organizacao,
