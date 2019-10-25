@@ -70,14 +70,16 @@ participantes = {}
 for filename in filelist:
     with open(filename) as csvfile:
         reader = csv.reader(csvfile)
-        lista = [{'nome': row[0],
-                  'email': row[1],
-                  'fingerprint': fp(row[0], row[1], local, ano, mes, dia),
-                  'role': row[3] if len(row) > 3 else "participante",
-                  'palestras': row[4:] if len(row) > 4 and
-                  row[3] == 'palestrante' else []}
+        lista = [{'nome': row[0].strip(),
+                  'email': row[1].strip(),
+                  'fingerprint': fp(row[0].strip(), row[1].strip(),
+                                    local, ano, mes, dia),
+                  'role': row[3].strip() if len(row) > 3 else "participante",
+                  'palestras': list(map(str.strip, row[4:]))
+                  if len(row) > 4 and row[3].strip() == 'palestrante' else []}
                  for row in reader
-                 if row[2] != '' and row[1].lower()[:4] != "nome"]
+                 if len(row) >= 2 and
+                 row[2] != '' and row[1].lower()[:4] != "nome"]
         for x in lista:
             p = participantes.get(x['email'], {'nome': x['nome'],
                                                'email': x['email'],
