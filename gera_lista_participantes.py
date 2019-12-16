@@ -5,6 +5,8 @@ import csv
 import sys
 import json
 import hashlib
+import os
+import os.path
 
 
 def fp(nome, email, local, ano, mes, dia):
@@ -102,6 +104,9 @@ evento = {"horas": horas, "instituicao": instituicao,
           "horas_organizacao": horas_organizacao,
           "data": "%s-%s-%s" % (ano, mes, dia), "cidade": cidade,
           "codename": local, "participantes": list(participantes.values())}
+
+if not os.path.isdir('data'):
+    os.mkdir('data')
 
 with open("data/%s-%s-%s-%s.json" % (ano, mes, dia, local), "w") as outfile:
     print(json.dumps(evento, indent=4, sort_keys=True), file=outfile)
